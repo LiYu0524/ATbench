@@ -65,8 +65,12 @@ ATBench organizes unsafe trajectories along three diagnosis dimensions: **Risk S
 - **Tool coverage**: 2,084 available tools and 1,954 invoked tools
 - **Quality control**: rule-based filtering, LLM-based filtering, and full human audit
 
+### Model Performance on ATBench
+
+The figure below compares representative model performance on prior agent-safety benchmarks and **ATBench**. For most models, performance is lower on **ATBench**, indicating higher overall difficulty.
+
 <p align="center">
-  <img src="https://huggingface.co/datasets/AI45Research/ATBench/resolve/main/figures/ATBench/benchmark_distribution.png" alt="ATBench taxonomy distribution" width="100%">
+  <img src="assets/model_performance.png" alt="Model performance comparison including ATBench" width="100%">
 </p>
 
 ### Generation Pipeline
@@ -94,6 +98,12 @@ The figure below shows two representative unsafe cases from the latest ATBench r
 - **Interaction horizon**: 8.97 average turns
 - **Tool coverage**: 1,575 available tools
 - **Paper**: [AgentDoG: A Diagnostic Guardrail Framework for AI Agent Safety and Security](https://arxiv.org/abs/2601.18491)
+
+The figure below shows the fine-grained taxonomy distribution for the original **ATBench500** release:
+
+<p align="center">
+  <img src="https://huggingface.co/datasets/AI45Research/ATBench/resolve/main/figures/ATBench500/benchmark_distribution.png" alt="ATBench500 taxonomy distribution" width="100%">
+</p>
 
 ## Quick Start
 
