@@ -1,10 +1,10 @@
 # ATBench: Agent Trajectory Safety Benchmark Family
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2604.02022">ATBench Paper</a>&nbsp&nbsp | &nbsp&nbsp
-  <a href="https://arxiv.org/abs/2601.18491">AgentDoG Paper (ATBench500)</a>&nbsp&nbsp | &nbsp&nbsp
-  <a href="https://huggingface.co/datasets/AI45Research/ATBench">Hugging Face Dataset</a>&nbsp&nbsp | &nbsp&nbsp
-  <a href="https://huggingface.co/collections/AI45Research/agentdog">Hugging Face Collection</a>
+  <a href="https://arxiv.org/abs/2604.02022">📄 ATBench Paper</a>&nbsp&nbsp | &nbsp&nbsp
+  <a href="https://arxiv.org/abs/2601.18491">🧾 AgentDoG Paper (ATBench500)</a>&nbsp&nbsp | &nbsp&nbsp
+  <a href="https://huggingface.co/datasets/AI45Research/ATBench">🤗 Hugging Face Dataset</a>&nbsp&nbsp | &nbsp&nbsp
+  <a href="https://huggingface.co/collections/AI45Research/agentdog">🤗 Hugging Face Collection</a>
 </p>
 
 **ATBench** is a family of trajectory-level safety benchmarks for long-horizon, tool-using AI agents.
