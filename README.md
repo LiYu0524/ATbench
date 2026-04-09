@@ -59,6 +59,10 @@ ATBench organizes unsafe trajectories along three diagnosis dimensions: **Risk S
 
 **ATBench** is the current main release introduced in [ATBench: A Diverse and Realistic Agent Trajectory Benchmark for Safety Evaluation and Diagnosis](https://arxiv.org/abs/2604.02022).
 
+<p align="center">
+  <img src="assets/teaser.png" alt="ATBench teaser" width="100%">
+</p>
+
 - **Scale**: 1,000 trajectories
 - **Label balance**: 503 safe / 497 unsafe
 - **Interaction horizon**: 9.01 average turns
