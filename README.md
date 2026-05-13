@@ -52,7 +52,7 @@ This shared formulation makes the two releases directly comparable while preserv
 ATBench organizes unsafe trajectories along three diagnosis dimensions: **Risk Source**, **Failure Mode**, and **Real-World Harm**. The taxonomy contains 8 risk-source categories, 14 failure-mode categories, and 10 real-world-harm categories, and serves as the shared fine-grained label space for benchmark construction and analysis.
 
 <p align="center">
-  <img src="https://huggingface.co/datasets/AI45Research/ATBench/resolve/main/figures/ATBench/safety_taxonomy.png" alt="ATBench three-dimensional safety taxonomy" width="100%">
+  <img src="assets/safety_taxonomy.png" alt="ATBench three-dimensional safety taxonomy" width="100%">
 </p>
 
 ## Latest Release: ATBench
