@@ -87,9 +87,9 @@ Ranks use standard competition ranking on the displayed one-decimal F1 value. Ti
 | 2026-05-11 | [Content-Aware Attack Detection in LLM Agent Tool-Call Traffic](https://arxiv.org/abs/2605.11053) | Evaluated | 999 extractable current ATBench cases; label-stratified 70/10/20, three seeds | Random Forest: AUROC 0.784 +/- 0.006, F1 0.669 +/- 0.036 | Paper only |
 | 2026-04-16 | [ATBench-Claw and ATBench-Codex](https://arxiv.org/abs/2604.14858) | Official extension | Two separate 500-case domain-customized releases | AgentDoG-Qwen3-4B F1: 89.58 on Claw, 83.79 on Codex | [Claw data](https://huggingface.co/datasets/AI45Research/ATBench-Claw), [Codex data](https://huggingface.co/datasets/AI45Research/ATBench-Codex) |
 | 2026-02-16 | [A Trajectory-Based Safety Audit of Clawdbot](https://arxiv.org/abs/2602.14364) | Dataset use | Ten ATBench500-derived cases inside a 34-case audit | No source-specific ATBench score reported | Paper only |
-| 2026-01-27 | [AgentDoG](https://arxiv.org/abs/2601.18491) | Evaluated | Full ATBench500 held-out evaluation | AgentDoG-Qwen3-4B: Acc 92.8, Precision 90.5, Recall 95.6, F1 93.0 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog) |
+| 2026-01-26 | [AgentDoG](https://arxiv.org/abs/2601.18491) | Evaluated | Full ATBench500 held-out evaluation | AgentDoG-Qwen3-4B: Acc 92.8, Precision 90.5, Recall 95.6, F1 93.0 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog) |
 
-_Checked through 2026-07-10. This table includes only papers that evaluate or use a released ATBench configuration; citation-only papers remain in the internal evidence audit._
+_Checked through 2026-07-10. This table includes only papers that evaluate or use a released ATBench configuration; citation-only papers are not listed._
 <!-- ATBENCH-LEADERBOARD:END -->
 
 ## Shared Task Definition
