@@ -228,9 +228,11 @@ remains only in the audit subsection because it references the official
 ATBench-Claw/ATBench-Codex report rather than the main ATBench paper; it is not
 counted in the 13 direct citations to the main ATBench paper.
 
-The README must describe 13 as a verified lower bound rather than a complete
-global citation count because Google Scholar was inaccessible behind CAPTCHA,
-while OpenAlex and DataCite returned no useful citing records.
+The internal design audit records 13 as a verified lower bound rather than a
+complete global citation count because Google Scholar was inaccessible behind
+CAPTCHA, while OpenAlex and DataCite returned no useful citing records. This
+count is audit-only evidence: it is not rendered in the Repo-first README's
+evaluation/use tracker.
 
 ### 5.5 Other audited exclusions
 
@@ -324,7 +326,8 @@ exact COLM 2026 News item and both tables; Table 1 has 27 rows with FATE ranked
 first on the current full-set ATBench leaderboard at F1 79.5; AgentDoG 1.5
 contributes all five released variants; Table 2 has exactly the 10 verified
 evaluation/use papers with clear release/protocol labels; citation-only and
-extension-only papers remain out of the rendered tracker; the separately
-documented 13-paper direct-citation lower bound remains accurate; and every
-linked resource resolves. Updating the Hugging Face card is explicitly
-deferred and is not required to accept this phase.
+extension-only papers remain out of the rendered tracker; and every linked
+resource resolves. The separately documented 13-paper direct-citation lower
+bound remains internal design-audit coverage and is explicitly not a public
+README acceptance requirement. Updating the Hugging Face card is deferred and
+is not required to accept this phase.
