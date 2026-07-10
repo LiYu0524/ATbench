@@ -343,17 +343,19 @@ Expected: only `.DS_Store` and `COLM Rebuttal/` are untracked; no tracked file i
 Run the push, then fetch and assert against the repository's exact raw README URL:
 
 ```bash
+set -euo pipefail
+
 git push origin main
 
 raw_url='https://raw.githubusercontent.com/LiYu0524/ATbench/main/README.md'
 raw_readme="$(curl -fsSL --max-time 30 "$raw_url")"
 
-printf '%s\n' "$raw_readme" | rg -Fqx -- '- `2026/07/10`: 🎉🎉🎉 **ATBench has been accepted to COLM 2026!**'
-printf '%s\n' "$raw_readme" | rg -Fqx '## Leaderboard and Recent Evaluations'
-printf '%s\n' "$raw_readme" | rg -Fq 'Qwen3-8B-Instruct + FATE'
-printf '%s\n' "$raw_readme" | rg -Fq 'AgentDoG 1.5-4B-U'
+rg -Fqx -- '- `2026/07/10`: 🎉🎉🎉 **ATBench has been accepted to COLM 2026!**' <<< "$raw_readme"
+rg -Fqx '## Leaderboard and Recent Evaluations' <<< "$raw_readme"
+rg -Fq 'Qwen3-8B-Instruct + FATE' <<< "$raw_readme"
+rg -Fq 'AgentDoG 1.5-4B-U' <<< "$raw_readme"
 
-printf '%s\n' "$raw_readme" | awk '
+awk '
 BEGIN {
   active = 0
   rows = 0
@@ -392,7 +394,7 @@ END {
   }
   print "Remote README assertions passed; evaluation/use rows=10"
 }
-'
+' <<< "$raw_readme"
 ```
 
 Expected final line:
