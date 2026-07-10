@@ -136,7 +136,7 @@ Ranks use standard competition ranking on the displayed one-decimal F1 value. Ti
 | 2026-02-16 | [A Trajectory-Based Safety Audit of Clawdbot](https://arxiv.org/abs/2602.14364) | Dataset use | Ten ATBench500-derived cases inside a 34-case audit | No source-specific ATBench score reported | Paper only |
 | 2026-01-26 | [AgentDoG](https://arxiv.org/abs/2601.18491) | Evaluated | Full ATBench500 held-out evaluation | AgentDoG-Qwen3-4B: Acc 92.8, Precision 90.5, Recall 95.6, F1 93.0 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog) |
 
-_Checked through 2026-07-10. This table includes only papers that evaluate or use a released ATBench configuration; citation-only papers are not listed._
+_Checked through 2026-07-10. Includes papers that evaluate or use a released ATBench configuration._
 <!-- ATBENCH-LEADERBOARD:END -->
 ```
 
@@ -146,7 +146,9 @@ Run these exact exclusion checks; the citation-only `TRACE` paper is identified
 by `2606.00611` so the allowed `TRACES` evaluation row is not rejected:
 
 ```bash
-! rg -q 'Cites only|Cites extension' README.md
+set -euo pipefail
+
+! rg -qi 'citation-only|cites only|cites extension' README.md
 ! rg -q '2607\.01793|2606\.10484|2606\.08200|2606\.04051|2606\.00611|2605\.22643' README.md
 ! rg -q '13-paper direct-citation|verified lower bound of 13' README.md
 ```
@@ -179,18 +181,37 @@ Expected: the commit contains only `README.md`.
 Run these commands from the repository root. `README_PATH` exists only to permit smoke-testing the validator against the exact embedded block; normal execution uses `README.md`.
 
 ```bash
+set -euo pipefail
+
 readme="${README_PATH:-README.md}"
 
 awk '
-function clean(value) {
+function trim(value) {
   gsub(/^[[:space:]]+|[[:space:]]+$/, "", value)
-  gsub(/\*\*/, "", value)
   return value
+}
+function numeric(value) {
+  value = trim(value)
+  gsub(/\*\*/, "", value)
+  return value + 0
 }
 BEGIN {
   active = 0
   rows = 0
+  start_markers = 0
+  end_markers = 0
+  bold_cells = 0
   failed = 0
+}
+/^<!-- ATBENCH-LEADERBOARD:START -->$/ {
+  start_markers++
+  if (start_markers == 1) {
+    start_line = NR
+  }
+}
+/^<!-- ATBENCH-LEADERBOARD:END -->$/ {
+  end_markers++
+  end_line = NR
 }
 /^### Comparable Full-Set Leaderboard$/ {
   active = 1
@@ -200,11 +221,31 @@ BEGIN {
   active = 0
 }
 active && /^\| [0-9]+ \|/ {
-  split($0, column, "|")
+  field_count = split($0, column, "|")
   rows++
-  rank = clean(column[2]) + 0
-  method = clean(column[3])
-  f1 = clean(column[8]) + 0
+
+  if (field_count != 12) {
+    printf "Leaderboard arity error at row %d: got %d Markdown columns, expected 10\n",
+           rows, field_count - 2 > "/dev/stderr"
+    failed = 1
+  }
+
+  rank = numeric(column[2])
+  method = trim(column[3])
+  type = trim(column[4])
+  acc_cell = trim(column[5])
+  precision_cell = trim(column[6])
+  recall_cell = trim(column[7])
+  f1_cell = trim(column[8])
+  rs_cell = trim(column[9])
+  fm_cell = trim(column[10])
+  rh_cell = trim(column[11])
+  f1 = numeric(f1_cell)
+
+  if (type !~ /^(Closed|Open|Guard|Fine-tuned)$/) {
+    printf "Leaderboard type error at row %d: %s\n", rows, type > "/dev/stderr"
+    failed = 1
+  }
 
   if (rows > 1 && f1 > previous_f1) {
     printf "F1 order error at row %d: %.1f after %.1f\n", rows, f1, previous_f1 > "/dev/stderr"
@@ -217,6 +258,32 @@ active && /^\| [0-9]+ \|/ {
     failed = 1
   }
 
+  for (i = 5; i <= 11; i++) {
+    if (column[i] ~ /\*\*/) {
+      bold_cells++
+      allowed_bold = ((rows == 1 && i == 8) ||
+                      (rows == 2 && i == 5) ||
+                      (rows == 6 && (i == 9 || i == 10 || i == 11)) ||
+                      (rows == 14 && i == 7) ||
+                      (rows == 26 && i == 6))
+      if (!allowed_bold) {
+        printf "Unexpected bold leaderboard cell at row %d, column %d\n",
+               rows, i - 1 > "/dev/stderr"
+        failed = 1
+      }
+    }
+  }
+
+  if ((rows == 1 && f1_cell != "**79.5**") ||
+      (rows == 2 && acc_cell != "**78.4**") ||
+      (rows == 6 && (rs_cell != "**75.2**" || fm_cell != "**27.5**" ||
+                     rh_cell != "**62.9**")) ||
+      (rows == 14 && recall_cell != "**89.5**") ||
+      (rows == 26 && precision_cell != "**85.7**")) {
+    printf "Bold-maximum error at leaderboard row %d\n", rows > "/dev/stderr"
+    failed = 1
+  }
+
   ranks[rows] = rank
   scores[rows] = f1
   methods[rows] = method
@@ -224,6 +291,11 @@ active && /^\| [0-9]+ \|/ {
   previous_f1 = f1
 }
 END {
+  if (start_markers != 1 || end_markers != 1 || start_line >= end_line) {
+    printf "Leaderboard marker error: START=%d, END=%d\n",
+           start_markers, end_markers > "/dev/stderr"
+    failed = 1
+  }
   if (rows != 27) {
     printf "Leaderboard row-count error: got %d, expected 27\n", rows > "/dev/stderr"
     failed = 1
@@ -238,11 +310,15 @@ END {
     print "Tie-order error for the two F1 67.8 rows" > "/dev/stderr"
     failed = 1
   }
+  if (bold_cells != 7) {
+    printf "Bold-cell count error: got %d, expected 7\n", bold_cells > "/dev/stderr"
+    failed = 1
+  }
   if (failed) {
     exit 1
   }
-  printf "Leaderboard rows=%d; rank/F1 order=OK; F1 67.8 ranks=%d,%d; following rank=%d\n",
-         rows, ranks[10], ranks[11], ranks[12]
+  printf "Leaderboard rows=%d; markers=%d/%d; arity/types/bold maxima=OK; rank/F1 order=OK; F1 67.8 ranks=%d,%d; following rank=%d\n",
+         rows, start_markers, end_markers, ranks[10], ranks[11], ranks[12]
 }
 ' "$readme"
 
@@ -255,16 +331,16 @@ BEGIN {
   active = 0
   rows = 0
   failed = 0
-  expected[1] = "2606.20510"
-  expected[2] = "2606.01166"
-  expected[3] = "2605.29801"
-  expected[4] = "2605.27690"
-  expected[5] = "2605.21422"
-  expected[6] = "2605.11882"
-  expected[7] = "2605.11053"
-  expected[8] = "2604.14858"
-  expected[9] = "2602.14364"
-  expected[10] = "2601.18491"
+  expected_date[1] = "2026-06-18"; expected_id[1] = "2606.20510"
+  expected_date[2] = "2026-05-31"; expected_id[2] = "2606.01166"
+  expected_date[3] = "2026-05-28"; expected_id[3] = "2605.29801"
+  expected_date[4] = "2026-05-26"; expected_id[4] = "2605.27690"
+  expected_date[5] = "2026-05-20"; expected_id[5] = "2605.21422"
+  expected_date[6] = "2026-05-12"; expected_id[6] = "2605.11882"
+  expected_date[7] = "2026-05-11"; expected_id[7] = "2605.11053"
+  expected_date[8] = "2026-04-16"; expected_id[8] = "2604.14858"
+  expected_date[9] = "2026-02-16"; expected_id[9] = "2602.14364"
+  expected_date[10] = "2026-01-26"; expected_id[10] = "2601.18491"
 }
 /^### Recent Papers Evaluating or Using ATBench$/ {
   active = 1
@@ -274,23 +350,48 @@ BEGIN {
   active = 0
 }
 active && /^\| 2026-/ {
-  split($0, column, "|")
+  field_count = split($0, column, "|")
   rows++
   date = clean(column[2])
+  paper = clean(column[3])
+  relation = clean(column[4])
+  protocol = clean(column[5])
   date_key = date
   gsub(/-/, "", date_key)
   date_key += 0
+
+  if (field_count != 8) {
+    printf "Evaluation/use arity error at row %d: got %d Markdown columns, expected 6\n",
+           rows, field_count - 2 > "/dev/stderr"
+    failed = 1
+  }
 
   if (rows > 1 && date_key > previous_date_key) {
     printf "Date-order error at row %d: %s after %s\n", rows, date, previous_date > "/dev/stderr"
     failed = 1
   }
-  if (index($0, expected[rows]) == 0) {
-    printf "Paper-order error at row %d: expected arXiv %s\n", rows, expected[rows] > "/dev/stderr"
+  if (date != expected_date[rows]) {
+    printf "Date error at row %d: got %s, expected %s\n",
+           rows, date, expected_date[rows] > "/dev/stderr"
     failed = 1
   }
-  if ($0 ~ /\| Cites (only|extension) \|/) {
-    printf "Citation-only relation rendered at row %d\n", rows > "/dev/stderr"
+
+  paper_copy = paper
+  arxiv_url_count = gsub(/https:\/\/arxiv\.org\/abs\//, "", paper_copy)
+  arxiv_id = paper
+  sub(/^.*https:\/\/arxiv\.org\/abs\//, "", arxiv_id)
+  sub(/\).*/, "", arxiv_id)
+  if (arxiv_url_count != 1 || arxiv_id != expected_id[rows]) {
+    printf "Paper-order error at row %d: got arXiv %s, expected %s\n",
+           rows, arxiv_id, expected_id[rows] > "/dev/stderr"
+    failed = 1
+  }
+  if (relation !~ /^(Ranked|Evaluated|Official extension|Dataset use)$/) {
+    printf "Relation error at row %d: %s\n", rows, relation > "/dev/stderr"
+    failed = 1
+  }
+  if (protocol == "") {
+    printf "Empty Release / Protocol at row %d\n", rows > "/dev/stderr"
     failed = 1
   }
 
@@ -305,7 +406,7 @@ END {
   if (failed) {
     exit 1
   }
-  printf "Evaluation/use rows=%d; date order=OK; exact paper order=OK\n", rows
+  printf "Evaluation/use rows=%d; arity/relations/protocols=OK; date order=OK; exact dates/arXiv order=OK\n", rows
 }
 ' "$readme"
 ```
@@ -313,8 +414,8 @@ END {
 Expected output:
 
 ```text
-Leaderboard rows=27; rank/F1 order=OK; F1 67.8 ranks=10,10; following rank=12
-Evaluation/use rows=10; date order=OK; exact paper order=OK
+Leaderboard rows=27; markers=1/1; arity/types/bold maxima=OK; rank/F1 order=OK; F1 67.8 ranks=10,10; following rank=12
+Evaluation/use rows=10; arity/relations/protocols=OK; date order=OK; exact dates/arXiv order=OK
 ```
 
 - [ ] **Step 2: Check links and Markdown whitespace**
@@ -322,11 +423,13 @@ Evaluation/use rows=10; date order=OK; exact paper order=OK
 Run:
 
 ```bash
-git diff --check
+set -euo pipefail
+
+git diff --check origin/main...HEAD
 rg -o 'https://[^[:space:])>"}]+' README.md | sort -u | xargs -n1 -P8 sh -c 'u="$1"; code=$(curl -L -sS --max-time 20 -o /dev/null -w "%{http_code}" "$u"); printf "%s %s\n" "$code" "$u"; [ "$code" = 200 ]' sh
 ```
 
-The URL character class deliberately excludes Markdown, HTML, and BibTeX closing delimiters. Expected: `git diff --check` is silent, the URL command has no xargs/shell quoting errors, and every line begins with HTTP `200`.
+The URL character class deliberately excludes Markdown, HTML, and BibTeX closing delimiters. Expected: `git diff --check origin/main...HEAD` is silent, the URL command has no xargs/shell quoting errors, and every line begins with HTTP `200`.
 
 - [ ] **Step 3: Confirm only unrelated untracked files remain**
 
@@ -348,59 +451,29 @@ set -euo pipefail
 git push origin main
 
 raw_url='https://raw.githubusercontent.com/LiYu0524/ATbench/main/README.md'
-raw_readme="$(curl -fsSL --max-time 30 "$raw_url")"
+remote_readme="$(mktemp)"
+expected_readme="$(mktemp)"
+trap 'rm -f "$remote_readme" "$expected_readme"' EXIT
 
-rg -Fqx -- '- `2026/07/10`: 🎉🎉🎉 **ATBench has been accepted to COLM 2026!**' <<< "$raw_readme"
-rg -Fqx '## Leaderboard and Recent Evaluations' <<< "$raw_readme"
-rg -Fq 'Qwen3-8B-Instruct + FATE' <<< "$raw_readme"
-rg -Fq 'AgentDoG 1.5-4B-U' <<< "$raw_readme"
+curl -fsSL --max-time 30 "$raw_url" -o "$remote_readme"
+git show HEAD:README.md > "$expected_readme"
 
-awk '
-BEGIN {
-  active = 0
-  rows = 0
-  expected[1] = "2606.20510"
-  expected[2] = "2606.01166"
-  expected[3] = "2605.29801"
-  expected[4] = "2605.27690"
-  expected[5] = "2605.21422"
-  expected[6] = "2605.11882"
-  expected[7] = "2605.11053"
-  expected[8] = "2604.14858"
-  expected[9] = "2602.14364"
-  expected[10] = "2601.18491"
-}
-/^### Recent Papers Evaluating or Using ATBench$/ {
-  active = 1
-  next
-}
-/^<!-- ATBENCH-LEADERBOARD:END -->$/ {
-  active = 0
-}
-active && /^\| 2026-/ {
-  rows++
-  if (index($0, expected[rows]) == 0) {
-    printf "Remote paper-order error at row %d: expected arXiv %s\n", rows, expected[rows] > "/dev/stderr"
-    failed = 1
-  }
-}
-END {
-  if (rows != 10) {
-    printf "Remote evaluation/use row-count error: got %d, expected 10\n", rows > "/dev/stderr"
-    failed = 1
-  }
-  if (failed) {
-    exit 1
-  }
-  print "Remote README assertions passed; evaluation/use rows=10"
-}
-' <<< "$raw_readme"
+rg -Fqx -- '- `2026/07/10`: 🎉🎉🎉 **ATBench has been accepted to COLM 2026!**' "$remote_readme"
+rg -Fqx '## Leaderboard and Recent Evaluations' "$remote_readme"
+
+if ! cmp -s "$expected_readme" "$remote_readme"; then
+  echo 'Remote README differs from git show HEAD:README.md' >&2
+  diff -u "$expected_readme" "$remote_readme" >&2 || true
+  exit 1
+fi
+
+echo 'Remote README byte-for-byte matches HEAD; exact News/heading assertions passed'
 ```
 
 Expected final line:
 
 ```text
-Remote README assertions passed; evaluation/use rows=10
+Remote README byte-for-byte matches HEAD; exact News/heading assertions passed
 ```
 
 Hugging Face synchronization remains deferred and is not part of this plan's completion gate.

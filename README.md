@@ -89,7 +89,7 @@ Ranks use standard competition ranking on the displayed one-decimal F1 value. Ti
 | 2026-02-16 | [A Trajectory-Based Safety Audit of Clawdbot](https://arxiv.org/abs/2602.14364) | Dataset use | Ten ATBench500-derived cases inside a 34-case audit | No source-specific ATBench score reported | Paper only |
 | 2026-01-26 | [AgentDoG](https://arxiv.org/abs/2601.18491) | Evaluated | Full ATBench500 held-out evaluation | AgentDoG-Qwen3-4B: Acc 92.8, Precision 90.5, Recall 95.6, F1 93.0 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog) |
 
-_Checked through 2026-07-10. This table includes only papers that evaluate or use a released ATBench configuration; citation-only papers are not listed._
+_Checked through 2026-07-10. Includes papers that evaluate or use a released ATBench configuration._
 <!-- ATBENCH-LEADERBOARD:END -->
 
 ## Shared Task Definition
