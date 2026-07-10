@@ -20,6 +20,7 @@ The benchmark data is available on Hugging Face. This GitHub repository serves a
 
 ## News
 
+- `2026/07/10`: 🎉🎉🎉 **ATBench has been accepted to COLM 2026!**
 - `2026/04/09`: We add **ATBench**, a new 1,000-trajectory release with higher diversity, longer context, broader tool coverage, and a full human audit. The previous 500-case release is renamed to **ATBench500** in the public release lineage.
 - `2026/04/09`: **ATBench Engine Coming Soon**. The data generation engine and related tooling will be released in a future update.
 - `2026/01/27`: We release the original **ATBench500** benchmark together with the AgentDoG paper.
@@ -33,6 +34,63 @@ The benchmark data is available on Hugging Face. This GitHub repository serves a
 
 **Available Tools** counts unique tools exposed through per-trajectory tool pools.  
 **Used Tools** counts unique tools actually invoked in released trajectories.
+
+<!-- ATBENCH-LEADERBOARD:START -->
+## Leaderboard and Recent Evaluations
+
+Only complete evaluations of all 1,000 trajectories in the current `ATBench` release are cross-ranked below; `unsafe` is the positive class. Results on ATBench500, custom splits, subsets, transformed tasks, and official extensions remain visible in the evaluation/use tracker but do not share a rank with the current full-set leaderboard.
+
+### Comparable Full-Set Leaderboard
+
+| Rank | Model / Method | Type | Acc | Prec. | Rec. | F1 | R.S. | F.M. | R.H. |
+| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | [Qwen3-8B-Instruct + FATE](https://arxiv.org/abs/2605.11882) | Fine-tuned | 77.8 | 80.5 | 78.6 | **79.5** | 49.2 | 18.4 | 43.1 |
+| 2 | [AgentDoG 1.5-4B-U (Qwen3.5 Base)](https://arxiv.org/abs/2605.29801) | Guard | **78.4** | 79.8 | 75.7 | 77.7 | 24.1 | 9.5 | 28.4 |
+| 3 | [GPT-5.4](https://arxiv.org/abs/2604.02022) | Closed | 73.7 | 68.5 | 87.1 | 76.7 | 33.6 | 13.5 | 30.2 |
+| 4 | [Gemini-3.1-Pro](https://arxiv.org/abs/2604.02022) | Closed | 75.5 | 76.1 | 73.8 | 75.0 | 24.8 | 12.6 | 18.5 |
+| 5 | [Gemini-3-Flash](https://arxiv.org/abs/2604.02022) | Closed | 76.4 | 79.3 | 71.0 | 74.9 | 18.4 | 8.3 | 15.0 |
+| 6 | [AgentDoG 1.5-4B (Qwen3.5 Base)](https://arxiv.org/abs/2605.29801) | Guard | 72.4 | 69.2 | 80.3 | 74.3 | **75.2** | **27.5** | **62.9** |
+| 7 | [AgentDoG 1.5-8B (Llama-3.1 Base)](https://arxiv.org/abs/2605.29801) | Guard | 70.9 | 67.1 | 81.2 | 73.5 | 72.9 | 24.6 | 52.5 |
+| 8 | [GPT-5.2](https://arxiv.org/abs/2604.02022) | Closed | 69.0 | 65.6 | 79.3 | 71.8 | 29.5 | 12.0 | 26.8 |
+| 9 | [AgentDoG-Qwen3-4B](https://arxiv.org/abs/2604.02022) | Guard | 64.0 | 59.2 | 88.9 | 71.1 | 46.8 | 16.5 | 40.6 |
+| 10 | [AgentDoG 1.5-2B (Qwen3.5 Base)](https://arxiv.org/abs/2605.29801) | Guard | 69.0 | 70.1 | 65.7 | 67.8 | 68.0 | 24.0 | 53.8 |
+| 10 | [Qwen3.5-397B-A17B](https://arxiv.org/abs/2604.02022) | Open | 66.8 | 65.5 | 70.2 | 67.8 | 7.7 | 3.6 | 6.8 |
+| 12 | [ShieldAgent](https://arxiv.org/abs/2604.02022) | Guard | 62.5 | 58.0 | 81.4 | 67.7 | - | - | - |
+| 13 | [AgentDoG 1.5-0.8B (Qwen3.5 Base)](https://arxiv.org/abs/2605.29801) | Guard | 60.3 | 58.6 | 68.6 | 63.2 | 65.7 | 18.4 | 44.9 |
+| 14 | [Llama3.1-8B-Instruct](https://arxiv.org/abs/2604.02022) | Open | 45.3 | 47.3 | **89.5** | 61.9 | 6.2 | 5.8 | 15.5 |
+| 15 | [Qwen3-235B-A22B-Instruct-2507](https://arxiv.org/abs/2604.02022) | Open | 59.2 | 58.2 | 63.8 | 60.8 | 7.0 | 11.6 | 26.6 |
+| 16 | [NemoGuard](https://arxiv.org/abs/2605.29801) | Guard | 49.9 | 49.5 | 41.6 | 45.2 | - | - | - |
+| 17 | [JoySafety](https://arxiv.org/abs/2605.29801) | Guard | 56.9 | 61.7 | 35.0 | 44.7 | - | - | - |
+| 18 | [LlamaGuard4-12B](https://arxiv.org/abs/2604.02022) | Guard | 58.1 | 63.8 | 30.9 | 41.7 | - | - | - |
+| 19 | [QwQ-32B](https://arxiv.org/abs/2604.02022) | Open | 57.7 | 81.9 | 19.1 | 31.0 | 15.8 | 9.4 | 22.9 |
+| 20 | [Qwen3.5-2B](https://arxiv.org/abs/2605.29801) | Open | 59.1 | 74.3 | 19.2 | 30.5 | 7.7 | 6.6 | 11.1 |
+| 21 | [Qwen3.5-4B](https://arxiv.org/abs/2604.02022) | Open | 45.9 | 41.2 | 20.7 | 27.6 | 6.6 | 3.0 | 8.2 |
+| 22 | [Qwen3-4B-Instruct-2507](https://arxiv.org/abs/2604.02022) | Open | 55.7 | 77.6 | 15.3 | 25.5 | 1.0 | 9.6 | 21.2 |
+| 23 | [Qwen2.5-7B-Instruct](https://arxiv.org/abs/2604.02022) | Open | 53.4 | 73.8 | 9.7 | 17.1 | 5.3 | 6.0 | 15.5 |
+| 24 | [Qwen3-4B](https://arxiv.org/abs/2604.02022) | Open | 52.6 | 78.0 | 6.4 | 11.9 | 4.4 | 8.2 | 18.3 |
+| 25 | [Qwen3.5-0.8B](https://arxiv.org/abs/2605.29801) | Open | 48.6 | 66.7 | 5.9 | 10.8 | 1.3 | 2.9 | 4.7 |
+| 26 | [LlamaGuard3-8B](https://arxiv.org/abs/2604.02022) | Guard | 53.1 | **85.7** | 3.8 | 7.3 | - | - | - |
+| 27 | [Qwen3-Guard](https://arxiv.org/abs/2604.02022) | Guard | 51.5 | 40.0 | 0.4 | 0.8 | - | - | - |
+
+Ranks use standard competition ranking on the displayed one-decimal F1 value. Ties are ordered by accuracy descending and then model name ascending. `PRISM` has the protocol shape of a rankable full-set evaluation, but remains unranked because its exact best F1 is plot-only rather than numerically reported.
+
+### Recent Papers Evaluating or Using ATBench
+
+| Date | Paper / Method | Relation | Release / Protocol | Reported result | Resources |
+| --- | --- | --- | --- | --- | --- |
+| 2026-06-18 | [Efficient and Sound Probabilistic Verification for AI Agents](https://arxiv.org/abs/2606.20510) / SDP | Dataset use | 377 trajectories from the legacy AgentDoG-era ATBench (now ATBench500); transformed taint/Datalog task and size filtering | At threshold 0.8: utility 0.983, security 1.000, AUC 0.998; 303 ms vs. Praline 7,227 ms | Paper only |
+| 2026-05-31 | [BraveGuard](https://arxiv.org/abs/2606.01166) | Evaluated | Full ATBench500, final held-out evaluation | BraveGuard-Qwen3-Guard-8B: Acc 86.4, Recall 95.2, F1 86.1 | [Code](https://github.com/Yunhao-Feng/BraveGuard), [Model](https://huggingface.co/Yunhao-Feng/BraveGuard) |
+| 2026-05-28 | [AgentDoG 1.5](https://arxiv.org/abs/2605.29801) | Ranked | Full current 1,000-case ATBench evaluation; five released model variants | Best coarse result, AgentDoG 1.5-4B-U: Acc 78.4, Precision 79.8, Recall 75.7, F1 77.7; best fine-grained model, AgentDoG 1.5-4B: R.S. 75.2, F.M. 27.5, R.H. 62.9 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog15) |
+| 2026-05-26 | [TRACES](https://arxiv.org/abs/2605.27690) | Evaluated | Current ATBench, stratified 60/20/20 train/validation/test split | TRACES-Llama3.1-8B: Acc 85.5, F1 86.3, Recall 91.9 | Paper only |
+| 2026-05-20 | [PRISM](https://arxiv.org/abs/2605.21422) | Evaluated | Private approximately 2K training pool; full current ATBench evaluation | Best at 40% data selection; exact F1 is plot-only | Paper only |
+| 2026-05-12 | [On-Policy Self-Evolution via Failure Trajectories](https://arxiv.org/abs/2605.11882) / FATE | Ranked | Full current ATBench external evaluation; no ATBench training or tuning | Acc 77.8, Precision 80.5, Recall 78.6, F1 79.5 | [Code](https://github.com/YinBo0927/FATE), [Project](https://yinbo0927.github.io/FATE/) |
+| 2026-05-11 | [Content-Aware Attack Detection in LLM Agent Tool-Call Traffic](https://arxiv.org/abs/2605.11053) | Evaluated | 999 extractable current ATBench cases; label-stratified 70/10/20, three seeds | Random Forest: AUROC 0.784 +/- 0.006, F1 0.669 +/- 0.036 | Paper only |
+| 2026-04-16 | [ATBench-Claw and ATBench-Codex](https://arxiv.org/abs/2604.14858) | Official extension | Two separate 500-case domain-customized releases | AgentDoG-Qwen3-4B F1: 89.58 on Claw, 83.79 on Codex | [Claw data](https://huggingface.co/datasets/AI45Research/ATBench-Claw), [Codex data](https://huggingface.co/datasets/AI45Research/ATBench-Codex) |
+| 2026-02-16 | [A Trajectory-Based Safety Audit of Clawdbot](https://arxiv.org/abs/2602.14364) | Dataset use | Ten ATBench500-derived cases inside a 34-case audit | No source-specific ATBench score reported | Paper only |
+| 2026-01-27 | [AgentDoG](https://arxiv.org/abs/2601.18491) | Evaluated | Full ATBench500 held-out evaluation | AgentDoG-Qwen3-4B: Acc 92.8, Precision 90.5, Recall 95.6, F1 93.0 | [Code](https://github.com/AI45Lab/AgentDoG), [Models](https://huggingface.co/collections/AI45Research/agentdog) |
+
+_Checked through 2026-07-10. This table includes only papers that evaluate or use a released ATBench configuration; citation-only papers remain in the internal evidence audit._
+<!-- ATBENCH-LEADERBOARD:END -->
 
 ## Shared Task Definition
 
