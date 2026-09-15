@@ -2,11 +2,14 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2604.02022">📄 ATBench Paper</a>&nbsp&nbsp | &nbsp&nbsp
-  <a href="https://arxiv.org/abs/2601.18491">🧾 AgentDoG Paper (ATBench500)</a>
+  <a href="https://arxiv.org/abs/2601.18491">📄 AgentDoG Paper (ATBench500)</a>
+  <a href="https://arxiv.org/abs/2605.29801">📄 AgentDoG 1.5 Paper</a>
  <br>
   <a href="https://huggingface.co/datasets/AI45Research/ATBench">🤗 Hugging Face Dataset</a>&nbsp&nbsp | &nbsp&nbsp
   <a href="https://huggingface.co/collections/AI45Research/agentdog">🤗 Hugging Face Collection</a>
 </p>
+
+
 
 **ATBench** is a family of trajectory-level safety benchmarks for long-horizon, tool-using AI agents.
 The latest release is introduced in [ATBench: A Diverse and Realistic Agent Trajectory Benchmark for Safety Evaluation and Diagnosis](https://arxiv.org/abs/2604.02022).
@@ -189,6 +192,13 @@ If you use this benchmark family, please cite the corresponding release.
   year={2026},
   doi={10.48550/arXiv.2604.02022},
   url={https://arxiv.org/abs/2604.02022}
+}
+
+@article{liu2026agentdog,
+  title={AgentDoG 1.5: A Lightweight and Scalable Alignment Framework for AI Agent Safety and Security},
+  author={Liu, Dongrui and Li, Yu and Yang, Zhonghao and Wang, Peng and Chen, Guanxu and Xie, Yuejin and Mao, Qinghua and Qu, Wanying and Zhu, Yanxu and Zhou, Tianyi and others},
+  journal={arXiv preprint arXiv:2605.29801},
+  year={2026}
 }
 
 @article{liu2026agentdog,
